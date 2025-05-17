@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Распространение синильной кислоты в организме</title>
+    <!-- Bootstrap 5 Dark Theme -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --toxic-purple: #fcfafa;
+            --toxic-red: #fdb9b9;
+            --toxic-green: #4CAF50;
+            --dark-bg: #121212;
+            --card-bg: #1e1e1e;
+            --element-bg: #2d2d2d;
+        }
+        body {
+            background-color: var(--dark-bg);
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            padding-top: 20px;
+        }
+        .container {
+            max-width: 900px;
+        }
+        h1, h2, h3 {
+            color: var(--toxic-purple);
+            font-weight: 300;
+        }
+        h1 {
+            padding-bottom: 15px;
+            border-bottom: 1px solid #333;
+            margin-bottom: 25px;
+        }
+        .info-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            padding: 25px;
+            margin-bottom: 30px;
+            border-left: 4px solid var(--toxic-purple);
+        }
+        .animation-container {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 30px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        .animation-container img {
+            max-width: 100%;
+            border-radius: 4px;
+        }
+        .list-group-item {
+            background-color: var(--element-bg);
+            color: #e0e0e0;
+            border-color: #444;
+        }
+        .list-group-item:hover {
+            background-color: #3a3a3a;
+        }
+        .toxic-icon {
+            color: var(--toxic-red);
+            margin-right: 10px;
+        }
+        .calculator-form {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            border-left: 4px solid var(--toxic-red);
+        }
+        .result-card {
+            background-color: #1e3a1e;
+            border-left: 4px solid var(--toxic-green);
+        }
+        .form-label {
+            color: var(--toxic-purple);
+            font-weight: 500;
+        }
+        .btn-calculate {
+            background-color: var(--toxic-purple);
+            border: none;
+            color: #121212;
+            font-weight: bold;
+            padding: 10px 20px;
+            transition: all 0.3s;
+        }
+        .btn-calculate:hover {
+            background-color: #9a67ea;
+            transform: translateY(-2px);
+        }
+        .form-control, .form-select {
+            background-color: var(--element-bg);
+            color: #fcfafa;
+            border: 1px solid #444;
+        }
+        .form-control:focus, .form-select:focus {
+            background-color: var(--element-bg);
+            color: #e0e0e0;
+            border-color: var(--toxic-purple);
+            box-shadow: 0 0 0 0.25rem rgba(187, 134, 252, 0.25);
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+            font-size: 0.9em;
+        }
+        .toxin-option {
+            display: flex;
+            align-items: center;
+        }
+        .toxin-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            border-radius: 50%;
+        }
+        .form-row {
+            align-items: flex-end;
+        }
+    </style>
+</head>
+<body class="bg-dark">
+    <div class="container py-4">
+        <header class="mb-5 text-center">
+            <h1 class="display-4">Распространение синильной кислоты (HCN) в организме человека</h1>
+            <p class="lead text-muted">Калькулятор токсического воздействия и визуализация</p>
+        </header>
+        
+        <div class="calculator-form">
+            <h2 class="mb-4"><i class="fas fa-calculator toxic-icon"></i>Калькулятор воздействия</h2>
+            <form method="post" action="/">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label for="weight" class="form-label">Вес человека (кг)</label>
+                        <input type="number" class="form-control" id="weight" name="weight" min="1" step="any" 
+                               required value="{{ request.form.weight or '' }}" placeholder="50-150">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="amount" class="form-label">Количество съеденного (г)</label>
+                        <input type="number" class="form-control" id="amount" name="amount" min="0" step="any" 
+                               required value="{{ request.form.amount or '' }}" placeholder="0-500">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="toxin_type" class="form-label">Тип токсина</label>
+                        <select class="form-select" id="toxin_type" name="toxin_type" required>
+                            {% set selected_type = request.form.toxin_type or 'apple' %}
+                            <option value="abrikos" {% if selected_type == 'abrikos' %}selected{% endif %}>
+                                <span class="toxin-option">
+                                    <span class="toxin-icon" style="background-color: #FFA500;"></span>
+                                    Абрикос
+                                </span>
+                            </option>
+                            <option value="apple" {% if selected_type == 'apple' %}selected{% endif %}>
+                                <span class="toxin-option">
+                                    <span class="toxin-icon" style="background-color: #FF6347;"></span>
+                                    Яблоко
+                                </span>
+                            </option>
+                            <option value="sliva" {% if selected_type == 'sliva' %}selected{% endif %}>
+                                <span class="toxin-option">
+                                    <span class="toxin-icon" style="background-color: #800080;"></span>
+                                    Слива
+                                </span>
+                            </option>
+                            <option value="persik" {% if selected_type == 'persik' %}selected{% endif %}>
+                                <span class="toxin-option">
+                                    <span class="toxin-icon" style="background-color: #FFD700;"></span>
+                                    Персик
+                                </span>
+                            </option>
+                            <option value="nektarin" {% if selected_type == 'nektarin' %}selected{% endif %}>
+                                <span class="toxin-option">
+                                    <span class="toxin-icon" style="background-color: #FF8C00;"></span>
+                                    Нектарин
+                                </span>
+                            </option>
+                            <option value="cherry" {% if selected_type == 'cherry' %}selected{% endif %}>
+                                <span class="toxin-option">
+                                    <span class="toxin-icon" style="background-color: #fd5e5e;"></span>
+                                    Вишня
+                                </span>
+                            </option>
+                            <option value="bambuk" {% if selected_type == 'bambuk' %}selected{% endif %}>
+                                <span class="toxin-option">
+                                    <span class="toxin-icon" style="background-color: #228B22;"></span>
+                                    Бамбук
+                                </span>
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-12 mt-3">
+                        <button type="submit" class="btn btn-calculate">
+                            <i class="fas fa-play-circle"></i> Рассчитать и показать анимацию
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        {% if result %}
+        <div class="info-card result-card">
+            <h2><i class="fas fa-chart-line toxic-icon"></i>Результаты расчёта:</h2>
+            <div class="alert alert-success bg-dark text-light border-success">
+                <pre class="mb-0">{{ result }}</pre>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="animation-container">
+            <h3><i class="fas fa-film toxic-icon"></i>Визуализация распространения HCN</h3>
+            <div class="ratio ratio-16x9 mb-3">
+                <img src="data:image/gif;base64,{{ animation }}" class="img-fluid rounded" alt="Анимация распространения HCN">
+            </div>
+            <p class="text-muted">Интерактивная визуализация распределения HCN в организме</p>
+        </div>
+        
+        <div class="info-card">
+            <h2 class="mb-4"><i class="fas fa-skull-crossbones toxic-icon"></i>Механизм токсического воздействия</h2>
+            <p>Синильная кислота (HCN) - это быстродействующий яд, который нарушает клеточное дыхание:</p>
+            
+            <ul class="list-group list-group-flush mb-4">
+                <li class="list-group-item d-flex align-items-center">
+                    <i class="fas fa-lungs toxic-icon"></i>
+                    <span>HCN быстро всасывается через легкие, кожу и ЖКТ</span>
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                    <i class="fas fa-heartbeat toxic-icon"></i>
+                    <span>С кровью распространяется по всему организму</span>
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                    <i class="fas fa-ban toxic-icon"></i>
+                    <span>Блокирует фермент цитохромоксидазу, нарушая использование кислорода клетками</span>
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                    <i class="fas fa-brain toxic-icon"></i>
+                    <span>Особенно сильно поражает мозг и сердце как наиболее чувствительные к кислородному голоданию</span>
+                </li>
+            </ul>
+            
+            <div class="alert alert-danger bg-dark border-danger">
+                <h5 class="alert-heading"><i class="fas fa-exclamation-triangle"></i> Клиническая картина отравления</h5>
+                <p>На анимации показано, как HCN (обозначено красным) распространяется по организму, накапливаясь в различных органах. Первые симптомы отравления появляются уже через 15-30 секунд.</p>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="footer">
+        <div class="container">
+            <p>© 2023 Токсикологические исследования. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
